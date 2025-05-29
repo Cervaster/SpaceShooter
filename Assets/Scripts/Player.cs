@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -67,6 +68,7 @@ public class Player : MonoBehaviour
             if (vidas <= 0)
             {
                 Destroy(this.gameObject);
+                SceneManager.LoadScene("Juego", LoadSceneMode.Single);
             }
             vidasTexto.text = "Vidas: " + (vidas);
         }
