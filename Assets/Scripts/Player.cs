@@ -5,16 +5,17 @@ using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
+    [Header("Player Settings")]
     [SerializeField] private float velocidad;
     [SerializeField] private float RatioDisparo;
     [SerializeField] private GameObject DisparoPrefab;
     [SerializeField] private Transform SpawnPoint1; 
     [SerializeField] private Transform SpawnPoint2;
 
+    [Header("UI Settings")]
     [SerializeField] private TextMeshProUGUI vidasTexto; 
     private float temporizador = 0.5f;
     private float vidas = 100;
-
     [SerializeField] private TextMeshProUGUI puntosText;
     private int puntos = 0;
 
@@ -72,6 +73,7 @@ public class Player : MonoBehaviour
             }
             vidasTexto.text = "Vidas: " + (vidas);
         }
+
     }
 
     public void SumarPuntos()

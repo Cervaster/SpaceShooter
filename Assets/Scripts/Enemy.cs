@@ -3,7 +3,7 @@ using System.Data;
 using TMPro;
 using UnityEngine;
 
-public class Enemigo : MonoBehaviour  
+public class Enemy : MonoBehaviour  
 {
     [SerializeField] private float velocidad;
     [SerializeField] private GameObject spawnPoint;

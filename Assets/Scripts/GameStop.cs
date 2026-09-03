@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PausarJuego : MonoBehaviour
+public class GameStop : MonoBehaviour
 {
     public GameObject menuPausa;
     private bool juegoPausado = false;
