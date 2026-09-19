@@ -10,7 +10,7 @@ A 2D arcade space shooter developed in **Unity** and **C#**, designed as a portf
 
 ## 📸 Gameplay Preview
 
-> 🎮 **[Play the WebGL version on Itch.io!]([https://cerverus.itch.io](https://cerverus.itch.io/space-shooter))
+[![Play on Itch.io](https://img.shields.io/badge/PLAY_ON-ITCH.IO-FA5C5C?style=for-the-badge&logo=itchio&logoColor=white)](https://cerverus.itch.io/space-shooter)
 
 ---
 
