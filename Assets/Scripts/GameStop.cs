@@ -3,22 +3,22 @@ using UnityEngine.SceneManagement;
 
 public class GameStop : MonoBehaviour
 {
-    public GameObject menuPausa;
-    private bool juegoPausado = false;
-    public AudioSource audioPausa; 
-    public AudioSource audioJuego;
+    public GameObject pauseMenu;
+    private bool pauseGame = false;
+    public AudioSource audioStop; 
+    public AudioSource audioGame;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        if (audioPausa == null)
+        if (audioStop == null)
         {
-            audioPausa = GetComponent<AudioSource>(); // Intenta obtener el AudioSource del mismo GameObject
+            audioStop = GetComponent<AudioSource>(); // Intenta obtener el AudioSource del mismo GameObject
         }
 
-        if (audioJuego == null)
+        if (audioGame == null)
         { 
-            audioJuego = GetComponent<AudioSource>();
+            audioGame = GetComponent<AudioSource>();
         }
     }
 
@@ -27,44 +27,44 @@ public class GameStop : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
-            if (juegoPausado)
+            if (pauseGame)
             {
-                Reanudar();
+                Resume();
             }
             else
             {
-                Pausar();
+                Pause();
             }
         }
     }
 
-    public void Reanudar()
+    public void Resume()
     {
-        menuPausa.SetActive(false);
+        pauseMenu.SetActive(false);
         Time.timeScale = 1;
-        juegoPausado = false;
+        pauseGame = false;
 
-        if (audioPausa != null && audioPausa.isPlaying)
+        if (audioStop != null && audioStop.isPlaying)
         {
-            audioPausa.Stop(); 
-            audioJuego.Play();
+            audioStop.Stop(); 
+            audioGame.Play();
         }
     }
 
-    public void Pausar()
+    public void Pause()
     {
-        menuPausa.SetActive(true);
+        pauseMenu.SetActive(true);
         Time.timeScale = 0;
-        juegoPausado = true;
+        pauseGame = true;
 
-        if (audioPausa != null)
+        if (audioStop != null)
         {
-            audioPausa.Play(); 
-            audioJuego.Pause();
+            audioStop.Play(); 
+            audioGame.Pause();
         }
     }
 
-    public void Entrar()
+    public void Entry()
     {
         SceneManager.LoadScene("Juego", LoadSceneMode.Single);
     }

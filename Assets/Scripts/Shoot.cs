@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class Shoot : MonoBehaviour
 {
-    [SerializeField] private float velocidad;
-    [SerializeField] private Vector3 direccion;
+    [SerializeField] private float speed;
+    [SerializeField] private Vector3 direction;
 
     private bool destroy = false;
 
@@ -16,7 +16,7 @@ public class Shoot : MonoBehaviour
     // Update is called once per frame
     void Update()
     {      
-        transform.Translate(direccion * velocidad * Time.deltaTime);
+        transform.Translate(direction * speed * Time.deltaTime);
         BulletCrasher();
     }
 

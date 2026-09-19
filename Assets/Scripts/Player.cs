@@ -2,43 +2,94 @@ using UnityEngine;
 using System.Collections;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
     [Header("Player Settings")]
-    [SerializeField] private float velocidad;
-    [SerializeField] private float RatioDisparo;
-    [SerializeField] private GameObject DisparoPrefab;
-    [SerializeField] private Transform SpawnPoint1; 
-    [SerializeField] private Transform SpawnPoint2;
+    //Input settings
+    [SerializeField] private float speed;
+    private Rigidbody2D rb2D;
+    private Vector2 moveDirection;
+    [SerializeField] private InputActionReference move;
+    [SerializeField] private InputActionReference attack;
+
+    //Shoot settings
+    [SerializeField] private float ratioShoot;
+    [SerializeField] private GameObject shootPrefab;
+    [SerializeField] private Transform spawnPoint1; 
+    [SerializeField] private Transform spawnPoint2;
+    private bool canShoot = true;
+
+    //Sprite settings
+    [SerializeField] private GameObject spritePlayer;
 
     [Header("UI Settings")]
-    [SerializeField] private TextMeshProUGUI vidasTexto; 
-    private float temporizador = 0.5f;
-    private float vidas = 100;
-    [SerializeField] private TextMeshProUGUI puntosText;
-    private int puntos = 0;
+    //UI settings
+    [SerializeField] private TextMeshProUGUI textLife; 
+    private float timer = 0.5f;
+    private float lifes = 100;
+    [SerializeField] private TextMeshProUGUI textPoints;
+    private int points = 0;
+    private int addLife = 0;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
-        vidasTexto.text = "Vidas: " + (vidas);
-        puntosText.text = "Puntos: " + (puntos);
+        // Initialize UI text
+        textLife.text = "Vidas: " + (lifes);
+        textPoints.text = "Puntos: " + (points);
+
+        // Get the Rigidbody2D component attached to the player
+        rb2D = GetComponent<Rigidbody2D>();
+
+        if (spritePlayer != null)
+        {
+            spritePlayer.GetComponent<SpriteRenderer>();
+        }
+
     }
 
-    // Update is called once per frame
     void Update()
     {
-        Movimiento();
         DelimitarMovimiento();
-        Disparar(); 
+
+        // Read the movement input from the InputActionReference
+        moveDirection = move.action.ReadValue<Vector2>();
+
+        // Update the shooting timer
+        timer += Time.deltaTime;
+
+        // Check if the player can shoot and if the attack button is pressed
+        if (canShoot && attack.action.IsPressed() && timer >= ratioShoot)
+        {
+            Attack(new InputAction.CallbackContext());
+            timer = 0;
+        }
+
+        AddLife();
     }
 
-    void Movimiento()
+    private void FixedUpdate()
     {
-        float inputH = Input.GetAxis("Horizontal");
-        float inputV = Input.GetAxis("Vertical");
-        transform.Translate(new Vector2(inputH, inputV).normalized * velocidad * Time.deltaTime);
+        rb2D.linearVelocity = new Vector2 (moveDirection.x * speed, moveDirection.y * speed);
+    }
+
+    private void OnEnable()
+    {
+        canShoot = true;
+    }
+
+    private void OnDisable()
+    {
+        canShoot = false;
+    }
+
+    private void Attack(InputAction.CallbackContext obj)
+    {
+        Instantiate(shootPrefab, spawnPoint1.position, Quaternion.identity);
+        Instantiate(shootPrefab, spawnPoint2.position, Quaternion.identity);
     }
 
     void DelimitarMovimiento()
@@ -48,38 +99,72 @@ public class Player : MonoBehaviour
         transform.position = new Vector3(xClamp, yClamp, 0);
     }
 
-    void Disparar()
-    {
-        temporizador += 1 * Time.deltaTime;
-
-        if (Input.GetKey(KeyCode.Space) && temporizador > RatioDisparo)   
-        {
-            Instantiate(DisparoPrefab, SpawnPoint1.position, Quaternion.identity);
-            Instantiate(DisparoPrefab, SpawnPoint2.position, Quaternion.identity);
-            temporizador = 0; 
-        }
-    }
-
+    // Handle collision with enemy projectiles or enemies
     private void OnTriggerEnter2D(Collider2D elOtro)
     {
         if (elOtro.gameObject.CompareTag("DisparoEnemigo") || elOtro.gameObject.CompareTag("Enemigo"))
         {
-            vidas -= 20;
+            Flash();
+            MinusPoints();
+            lifes -= 20;
             Destroy (elOtro.gameObject);
-            if (vidas <= 0)
+
+            if (lifes <= 0)
             {
                 Destroy(this.gameObject);
                 SceneManager.LoadScene("Juego", LoadSceneMode.Single);
             }
-            vidasTexto.text = "Vidas: " + (vidas);
+            textLife.text = "Vidas: " + (lifes);   
         }
 
     }
 
+    // called from Enemy.cs when an enemy is destroyed to add points to the player
     public void SumarPuntos()
     {
-        puntos += 100;
-        puntosText.text = "Puntos: " + (puntos);
+        points += 100;
+        textPoints.text = "Puntos: " + (points);
+
+        addLife += 1;
     }
 
+    private void MinusPoints()
+    {
+        if (points <=0)
+        {  
+            return; 
+        }
+        else
+        {
+            points -= 50;
+            textPoints.text = "Puntos: " + (points);
+        }
+        
+    }
+
+    // Flash the player sprite red when hit
+    private void Flash()
+    {
+        int flash = 3;
+        for (int i = 0; i < flash; i++)
+        {
+            spritePlayer.GetComponent<SpriteRenderer>().color = Color.red;
+            Invoke("ResetColor", 0.1f);
+        }
+    }
+    private void ResetColor()
+    {
+        spritePlayer.GetComponent<SpriteRenderer>().color = Color.white;
+    }
+
+    // Add life to the player when they reach a certain number of points
+    private void AddLife()
+    {
+        if (addLife >= 10)
+        {
+            lifes += 20;
+            textLife.text = "Vidas: " + (lifes);
+            addLife = 0;
+        }
+    }
 }
