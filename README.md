@@ -10,10 +10,7 @@ A 2D arcade space shooter developed in **Unity** and **C#**, designed as a portf
 
 ## 📸 Gameplay Preview
 
-<!-- Replace this image path with a GIF or screenshot of your game in a media folder -->
-![Space Shooter Gameplay](https://via.placeholder.com/800x450.png?text=Add+a+Gameplay+GIF+or+Screenshot+Here)
-
-> 🎮 **[Play the WebGL version on Itch.io!](https://cerverus.itch.io)** *(Add your direct game link here if applicable)*
+> 🎮 **[Play the WebGL version on Itch.io!]([https://cerverus.itch.io](https://cerverus.itch.io/space-shooter))
 
 ---
 
